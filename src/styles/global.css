@@ -1,0 +1,670 @@
+/* 260606 front프로젝트 시작 */
+
+/* 1단계 관리자 레이아웃 + 라우터 생성 */
+/* 2단계 Dashboard 화면 구현 */
+/* 3단계 Users 페이지 테이블 */
+/* 4단계 Users 페이지 검색 + 상태 필터 */
+/* 5단계 페이지네이션 */
+/* 6단계 CRUD - 1. Edit -> 모달 */
+/* 7단계 CRUD - 2. UserModal을 수정 폼(Update Form)으로 변경 */
+/* 8단계 CRUD - 3. Delete */
+/* 9단계 CRUD - 4. Create */
+/* 10단계 API / Hook 구조 분리 */
+/* 11단계 Orders 페이지 */
+/* 12단계 Products 페이지 */
+/* 13단계 Dashboard - 실제 요약 섹션 추가 */
+/*  */
+
+
+/* ----------------------------- 1단계 관리자 레이아웃 생성 ----------------------------- */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
+  background: #f5f5f7;
+  color: #111827;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+.admin-layout {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  padding: 28px 20px;
+  background: #111827;
+  color: #fff;
+}
+
+.sidebar-logo {
+  margin: 0 0 32px;
+  font-size: 24px;
+}
+
+.sidebar-nav {
+  display: grid;
+  gap: 8px;
+}
+
+.sidebar-nav a {
+  padding: 12px 14px;
+  border-radius: 12px;
+  color: #cbd5e1;
+  font-weight: 700;
+}
+
+.sidebar-nav a.active {
+  background: #2563eb;
+  color: #fff;
+}
+
+.admin-main {
+  min-width: 0;
+}
+
+.topbar {
+  height: 88px;
+  padding: 0 32px;
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+}
+
+.topbar-label {
+  margin: 0 0 4px;
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.topbar h2 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.content {
+  padding: 32px;
+}
+
+.not-found {
+  padding: 80px 24px;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .admin-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: static;
+    height: auto;
+  }
+
+  .sidebar-nav {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .sidebar-nav a {
+    text-align: center;
+    font-size: 14px;
+  }
+
+  .topbar {
+    padding: 0 20px;
+  }
+
+  .content {
+    padding: 24px 20px;
+  }
+}
+
+
+
+/* ------------------------------------------- ------------------------------------------- */
+/* ------------------------------ 2단계 Dashboard 화면 구현 ------------------------------ */
+.stats-grid {
+    display: grid;
+    gap: 24px;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.stat-card {
+    padding: 24px;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+.stat-card-title {
+    margin: 0 0 12px;
+    color: #6b7280;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.stat-card h3 {
+    margin: 0;
+    font-size: 32px;
+    font-weight: 800;
+}
+
+@media (max-width: 992px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 576px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* ------------------------------------------- ------------------------------------------- */
+/* ------------------------------ 3단계 Users 페이지 테이블 ------------------------------ */
+.page-header {
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.page-label {
+  margin: 0 0 6px;
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.page-header h2 {
+  margin: 0;
+  font-size: 32px;
+}
+
+.table-card {
+  overflow: hidden;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th,
+.data-table td {
+  padding: 18px 20px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.data-table th {
+  color: #6b7280;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+.status-badge {
+  display: inline-flex;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.status-badge.active {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-badge.inactive {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.table-button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 10px;
+  background: #2563eb;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .table-card {
+    overflow-x: auto;
+  }
+
+  .data-table {
+    min-width: 720px;
+  }
+}
+
+/* -------------- 4단계 Users 검색 + 상태 필터 */
+.page-controls {
+  display: flex;
+  gap: 12px;
+}
+
+.page-controls input,
+.page-controls select {
+  height: 44px;
+  padding: 0 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.page-controls input {
+  width: 240px;
+}
+
+.empty-table {
+  padding: 40px 20px;
+  text-align: center;
+  color: #6b7280;
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .page-controls {
+    flex-direction: column;
+  }
+
+  .page-controls input,
+  .page-controls select {
+    width: 100%;
+  }
+}
+
+
+
+/* ------------------------------------------- ------------------------------------------- */
+/* ------------------------------ 5단계 페이지네이션 ------------------------------ */
+.pagination {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.pagination button {
+  min-width: 40px;
+  height: 40px;
+  padding: 0 12px;
+  border: none;
+  border-radius: 10px;
+  background: #fff;
+  color: #111827;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.pagination button.active {
+  background: #2563eb;
+  color: #fff;
+}
+
+.pagination button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+
+
+/* ------------------------------ 6단계 CRUD - 1. Edit -> 모달 ------------------------------ */
+/* ------------------------------------------- ------------------------------------------- */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(0,0,0,0.5);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 1000;
+}
+
+.modal {
+  width: 420px;
+
+  padding: 24px;
+
+  border-radius: 16px;
+
+  background: white;
+}
+
+.modal h3 {
+  margin-top: 0;
+}
+
+.modal-content {
+  margin: 20px 0;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.modal-actions button {
+  padding: 10px 16px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  background: #2563eb;
+
+  color: white;
+
+  cursor: pointer;
+}
+
+
+
+/* ------------------------------ 7단계 CRUD - 2. UserModal을 수정 폼(Update Form)으로 변경 ------------------------------ */
+/* ------------------------------------------- ------------------------------------------- */
+.form-group {
+  margin-bottom: 16px;
+  display: grid;
+  gap: 8px;
+}
+
+.form-group label {
+  color: #374151;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.form-group input,
+.form-group select {
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+}
+
+.ghost-button,
+.primary-button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.ghost-button {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.primary-button {
+  background: #2563eb;
+  color: #fff;
+}
+
+
+
+/* ------------------------------ 8단계 CRUD - 3. Delete ------------------------------ */
+/* ------------------------------------------- ------------------------------------------- */
+.table-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.table-button.danger {
+  background: #dc2626;
+}
+
+.danger-button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 10px;
+  background: #dc2626;
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.delete-message {
+  margin: 20px 0 8px;
+  color: #111827;
+  font-size: 16px;
+}
+
+.delete-subtext {
+  margin: 0 0 24px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+
+
+/* ------------------------------ 9단계 CRUD - 4. Create ------------------------------ */
+/* ------------------------------------------- ------------------------------------------- */
+.page-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.add-button {
+  height: 44px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 12px;
+  background: #111827;
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .page-header-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .add-button {
+    width: 100%;
+  }
+}
+
+
+
+/* ------------------------------ 10단계 API / Hook 구조 분리 ------------------------------ */
+/* ------------------------------------------- ------------------------------------------- */
+.error-box {
+  max-width: 480px;
+  padding: 32px;
+  border-radius: 18px;
+  background: #fff;
+  text-align: center;
+}
+
+.error-box h3 {
+  margin: 0 0 8px;
+}
+
+.error-box p {
+  margin: 0 0 20px;
+  color: #6b7280;
+}
+
+.error-box button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 10px;
+  background: #2563eb;
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+
+
+/*  */
+/* ------------------------------ 11단계 Orders 페이지 ------------------------------ */
+/* ------------------------------------------- ------------------------------------------- */
+.status-badge.paid {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-badge.pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-badge.canceled {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+
+
+/* ------------------------------ 12단계 Products 페이지 ------------------------------ */
+/* ------------------------------------------- ------------------------------------------- */
+.status-badge.in-stock {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-badge.low-stock {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-badge.out-of-stock {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+
+
+/* ------------------------ 13단계 Dashboard - 실제 요약 섹션 추가 ------------------------ */
+/* ------------------------------------------- ------------------------------------------- */
+.dashboard-grid {
+  margin-top: 28px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.dashboard-panel {
+  padding: 24px;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+.dashboard-panel h3 {
+  margin: 0 0 20px;
+  font-size: 20px;
+}
+
+.summary-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 14px;
+}
+
+.summary-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.summary-list li:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.summary-list p {
+  margin: 4px 0 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.summary-list span {
+  font-weight: 800;
+}
+
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+
+/* ------------------------------ n단계 ------------------------------ */
+/* ------------------------------------------- ------------------------------------------- */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ----------------------------------- ----------------------------------- */
+/* ------------------------------  ------------------------------ */
