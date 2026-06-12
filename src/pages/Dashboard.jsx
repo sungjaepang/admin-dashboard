@@ -3,11 +3,19 @@
 /* 1단계 관리자 레이아웃 + 라우터 생성 */
 /* 2단계 Dashboard 화면 구현 */
 /* 13단계 Dashboard - 실제 요약 섹션 추가 */
+/* 15단계 Recharts로 Dashboard 차트 추가 */
+/* 16단계 Orders 상태별 Bar Chart */
+/*  */
+/*  */
 
 import StatCard from "../components/StatCard";
 /* 13단계 */
 import { orders } from "../constants/orders";
 import { products } from "../constants/products";
+/* 15단계 */ 
+import RevenueChart from "../components/RevenueChart";
+/* 16단계 */
+import OrderStatusChart from "../components/OrderStatusChart"; 
 
 
 function Dashboard() {
@@ -26,6 +34,13 @@ function Dashboard() {
         <StatCard title="Orders" value="3,891" />
         <StatCard title="Revenue" value="$128,000" /> {/* 수익 */}
         <StatCard title="Products" value="324" />
+      </div>
+
+      {/* 15단계 <RevenueChart /> */}
+      {/* 16단계 */}
+      <div className="chart-grid">
+        <RevenueChart />
+        <OrderStatusChart />
       </div>
       
       {/* 13단계 */}

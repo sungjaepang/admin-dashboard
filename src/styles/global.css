@@ -13,7 +13,13 @@
 /* 11단계 Orders 페이지 */
 /* 12단계 Products 페이지 */
 /* 13단계 Dashboard - 실제 요약 섹션 추가 */
+/* 15단계 Recharts로 Dashboard 차트 추가 */
+/* 16단계 Orders 상태별 Bar Chart */
+/* 17단계 Dark Mode */
 /*  */
+/*  */
+
+/* @mediaQuery Size -- 576px, 768px, 992px */
 
 
 /* ----------------------------- 1단계 관리자 레이아웃 생성 ----------------------------- */
@@ -643,6 +649,132 @@ select {
   .dashboard-grid {
     grid-template-columns: 1fr;
   }
+}
+
+
+
+/* ------------------------ 15단계 Recharts로 Dashboard 차트 추가 ------------------------ */
+/* ------------------------------------------- ------------------------------------------- */
+.chart-card {
+  margin-top: 28px;
+  padding: 24px;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+.chart-card h3 {
+  margin: 0 0 20px;
+  font-size: 20px;
+}
+
+.chart-wrap {
+  width: 100%;
+  height: 300px;
+}
+
+
+
+/* --------------------------- 16단계 Orders 상태별 Bar Chart --------------------------- */
+/* ------------------------------------------- ------------------------------------------- */
+.chart-grid {
+  margin-top: 28px;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 24px;
+}
+
+.chart-grid .chart-card {
+  margin-top: 0;
+}
+
+@media (max-width: 992px) {
+  .chart-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+
+/* ---------------------------------- 17단계 Dark Mode ---------------------------------- */
+/* ------------------------------------------- ------------------------------------------- */
+.app {
+  min-height: 100vh;
+  background: #f5f5f7;
+  color: #111827;
+}
+
+.topbar {
+  justify-content: space-between;
+}
+
+.theme-toggle {
+  height: 40px;
+  padding: 0 14px;
+  border: none;
+  border-radius: 999px;
+  background: #111827;
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.app.dark {
+  background: #0f172a;
+  color: #f8fafc;
+}
+
+.app.dark .admin-main {
+  background: #0f172a;
+}
+
+.app.dark .topbar,
+.app.dark .stat-card,
+.app.dark .chart-card,
+.app.dark .dashboard-panel,
+.app.dark .table-card,
+.app.dark .modal {
+  background: #1e293b;
+  color: #f8fafc;
+}
+
+.app.dark .topbar {
+  border-bottom-color: #334155;
+}
+
+.app.dark .topbar-label,
+.app.dark .page-label,
+.app.dark .stat-card-title,
+.app.dark .summary-list p,
+.app.dark .delete-subtext,
+.app.dark .empty-table {
+  color: #94a3b8;
+}
+
+.app.dark .data-table th,
+.app.dark .data-table td,
+.app.dark .summary-list li {
+  border-bottom-color: #334155;
+}
+
+.app.dark .page-controls input,
+.app.dark .page-controls select,
+.app.dark .form-group input,
+.app.dark .form-group select {
+  background: #0f172a;
+  color: #f8fafc;
+  border-color: #334155;
+}
+
+.app.dark .pagination button,
+.app.dark .ghost-button {
+  background: #334155;
+  color: #f8fafc;
+}
+
+.app.dark .theme-toggle {
+  background: #f8fafc;
+  color: #111827;
 }
 
 
