@@ -9,14 +9,21 @@
 /* 8단계 CRUD - 3. Delete */
 /* 9단계 CRUD - 4. Create */
 /* 10단계 API / Hook 구조 분리 */
+/* ➕ 
+    1. Users.jsx API 기반으로 변경 (ESLint 에러 안나게) 
+    2. deletedUserIds 중복 방지
+    3. API user role 처리
+    */
 /*  */
 /*  */
 
-import { useState } from "react"; /* 4단계 - 10단계에서 주석처리 */
+/* ➕ */
+import { useMemo, useState } from "react";
+// import { useState } from "react"; /* 4단계 - 10단계에서 주석처리 */
 // import { useEffect, useState } from "react"; /* 10단계 */
 // import { users } from "../constants/users"; /* 7단계에서 주석처리 */
-import { users as initialUsers } from "../constants/users"; /* 7단계 - 10단계에서 주석처리 */
-// import { useUsers } from "../hooks/useUsers"; /* 10단계 */
+// import { users as initialUsers } from "../constants/users"; /* 7단계 - 10단계에서 주석처리 */
+import { useUsers } from "../hooks/useUsers"; /* 10단계 */
 import UserModal from "../components/UserModal"; /* 6단계 */
 import DeleteConfirmModal from "../components/DeleteConfirmModal"; /* 8단계 */
 import toast from "react-hot-toast"; /* 9단계 */
@@ -32,10 +39,33 @@ function Users() {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const [selectedUser, setSelectedUser] = useState(null); /* 6단계 */
-    const [userList, setUserList] = useState(initialUsers); /* 7단계 - 10단계에서 주석처리 */
-    /* 10단계 */
-    // const { data: users = [], isLoading, isError, refetch } = useUsers();
+    // const [userList, setUserList] = useState(initialUsers); /* 7단계 - 10단계에서 주석처리 */
+    /* 10단계 + ➕ */
+    const { data: apiUsers = [], isLoading, isError, refetch } = useUsers();
     // const [userList, setUserList] = useState([]);
+
+    /* ➕ */
+    const [addedUsers, setAddedUsers] = useState([]);
+    const [updatedUsers, setUpdatedUsers] = useState({});
+    const [deletedUserIds, setDeletedUserIds] = useState([]);
+
+    /* ➕ */
+    const userList = useMemo(() => {
+        const normalizedUsers = apiUsers.map((user) => ({
+            id: user.id,
+            name: `${user.firstName} ${user.lastName}`,
+            email: user.email,
+            role: user.role ?? "User",
+            status: user.isDeleted ? "Inactive" : "Active",
+        }));
+
+        const mergedUsers = normalizedUsers
+            .filter((user) => !deletedUserIds.includes(user.id))
+            .map((user) => updatedUsers[user.id] ?? user);
+
+        return [...addedUsers, ...mergedUsers];
+    }, [apiUsers, addedUsers, updatedUsers, deletedUserIds]);
+
 
     // useEffect(() => {
     //     setUserList(users); /* 10단계 */
@@ -71,11 +101,17 @@ function Users() {
 
     /* 7단계 - 저장 함수 추가 */
     const handleSaveUser = (updatedUser) => {
-        setUserList((prevUsers) =>
-            prevUsers.map((user) =>
-                user.id === updatedUser.id ? updatedUser : user
-            )
-        );
+        // setUserList((prevUsers) =>
+        //     prevUsers.map((user) =>
+        //         user.id === updatedUser.id ? updatedUser : user
+        //     )
+        // );
+
+        /* ➕ */
+        setUpdatedUsers((prev) => ({
+            ...prev,
+            [updatedUser.id]: updatedUser,
+        }));
 
         setIsModalOpen(false);
         setSelectedUser(null);
@@ -85,8 +121,16 @@ function Users() {
 
     /* 8단계 - 삭제 함수 추가 */
     const handleDeleteUser = () => {
-        setUserList((prevUsers) =>
-            prevUsers.filter((user) => user.id !== deleteTargetUser.id)
+        // setUserList((prevUsers) =>
+        //     prevUsers.filter((user) => user.id !== deleteTargetUser.id)
+        // );
+
+        /* ➕ */
+        setDeletedUserIds((prev) => 
+            // deletedUserIds 중복 방지
+            prev.includes(deleteTargetUser.id)
+                ?prev
+                : /* */ [...prev, deleteTargetUser.id]
         );
 
         setIsDeleteModalOpen(false);
@@ -97,17 +141,28 @@ function Users() {
     
     /* 9단계 - 사용자 추가 함수 추가 */
     const handleAddUser = (newUser) => {
-        const nextId =
-            userList.length > 0
-                ? Math.max(...userList.map((user) => user.id)) + 1
-                : 1;
+        // const nextId =
+        //     userList.length > 0
+        //         ? Math.max(...userList.map((user) => user.id)) + 1
+        //         : 1;
 
-        setUserList((prevUsers) => [
+        // setUserList((prevUsers) => [
+        //     {
+        //         id: nextId,
+        //         ...newUser,
+        //     },
+        //     ...prevUsers,
+        // ]);
+
+        /* ➕ */
+        const nextId = Date.now();
+
+        setAddedUsers((prev) => [
             {
-                id: nextId,
-                ...newUser,
+            id: nextId,
+            ...newUser,
             },
-            ...prevUsers,
+            ...prev,
         ]);
 
         setIsAddModalOpen(false);
@@ -117,22 +172,22 @@ function Users() {
     };
 
 
-    /* 10단계 - 로딩/에러 처리 추가 */ 
-    // if (isLoading) {
-    //     return <p className="empty-table">사용자 데이터를 불러오는 중입니다.</p>;
-    // }
+    /* 10단계 + ➕ - 로딩/에러 처리 추가 */ 
+    if (isLoading) {
+        return <p className="empty-table">사용자 데이터를 불러오는 중입니다.</p>;
+    }
 
-    // if (isError) {
-    //     return (
-    //         <div className="error-box">
-    //             <h3>문제가 발생했습니다.</h3>
-    //             <p>사용자 데이터를 불러오지 못했습니다.</p>
-    //             <button type="button" onClick={() => refetch()}>
-    //                 다시 시도
-    //             </button>
-    //         </div>
-    //     );
-    // }
+    if (isError) {
+        return (
+            <div className="error-box">
+                <h3>문제가 발생했습니다.</h3>
+                <p>사용자 데이터를 불러오지 못했습니다.</p>
+                <button type="button" onClick={() => refetch()}>
+                    다시 시도
+                </button>
+            </div>
+        );
+    }
 
   return (
     <section>

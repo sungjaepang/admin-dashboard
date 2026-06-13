@@ -5,10 +5,16 @@
 /*  */
 /*  */
 
-import { users } from "../constants/users";
+// import { users } from "../constants/users";    /*axios로 변경*/
+import axios from "axios";
 
 export const getUsers = async () => {
-  return users;
+  const response = await axios.get(
+    "https://dummyjson.com/users"
+  );
+
+  // return users;    /*axios로 변경*/
+  return response.data.users;
 };
 
 
