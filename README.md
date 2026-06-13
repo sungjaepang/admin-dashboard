@@ -27,6 +27,10 @@ https://github.com/sungjaepang/admin-dashboard
 * Zustand
 * Recharts
 * React Hot Toast
+<!--  -->
+- Axios
+- TanStack Query
+- DummyJSON API
 
 ### Build Tool
 
@@ -39,6 +43,14 @@ https://github.com/sungjaepang/admin-dashboard
 ---
 
 ## Features
+
+<!--  -->
+### API Integration
+
+- DummyJSON Users API 연동
+- Axios 기반 비동기 데이터 요청
+- TanStack Query를 활용한 서버 상태 관리
+- Loading / Error / Refetch 처리
 
 ### Dashboard
 
@@ -99,6 +111,13 @@ src
 ---
 
 ## What I Learned
+
+<!--  -->
+### API & Server State
+
+Axios를 활용해 외부 API 데이터를 불러오고, TanStack Query로 서버 상태를 관리하는 구조를 학습했습니다.
+
+로컬 상태와 서버 상태를 분리하고, API 원본 데이터에 Create / Update / Delete 변경사항을 조합하는 방식으로 Users 페이지를 구성했습니다.
 
 ### React Component Design
 
